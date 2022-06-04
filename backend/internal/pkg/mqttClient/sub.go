@@ -4,6 +4,8 @@ import (
 	"errors"
 	"greenhouse-monitoring-iot/config"
 	"greenhouse-monitoring-iot/internal/pkg/errorHandler"
+	"math/rand"
+	"strconv"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -13,10 +15,10 @@ func Sub(num, qos *int, topic *string) (*[]*string, error) {
 	brokerHost := config.GetEnv(config.EnvEnum.MQTTBrokerHost).(string)
 	brokerPort := config.GetEnv(config.EnvEnum.MQTTBrokerPort).(string)
 	clientID := config.GetEnv(config.EnvEnum.MQTTClientID).(string)
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	choke := make(chan *string)
-
-	opts := mqtt.NewClientOptions().AddBroker(brokerHost + ":" + brokerPort).SetClientID(clientID)
+	opts := mqtt.NewClientOptions().AddBroker(brokerHost + ":" + brokerPort).SetClientID(clientID + strconv.Itoa(rand.Int()))
 	opts.SetAutoReconnect(false)
 	opts.SetConnectRetry(false)
 	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {

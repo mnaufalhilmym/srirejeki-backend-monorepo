@@ -35,10 +35,18 @@ func (d *Data) getSubscribeService(userSession *model.UserSession, dataSubscribe
 		return &returnedDataServiceData{code: fiber.StatusUnauthorized, payload: err.Error()}
 	}
 	num := 1
+	if len(dataSubscribeRequest.Limit) > 0 {
+		limit, err := strconv.Atoi(dataSubscribeRequest.Limit)
+		if err != nil {
+			errorHandler.LogErrorThenContinue("getSubscribeService5", err)
+		} else {
+			num = limit
+		}
+	}
 	qos := 0
 	msgArr, err := mqttclient.Sub(&num, &qos, &dataSubscribeRequest.Topic)
 	if err != nil {
-		errorHandler.LogErrorThenContinue("getSubscribeService5", err)
+		errorHandler.LogErrorThenContinue("getSubscribeService6", err)
 		return &returnedDataServiceData{code: fiber.StatusInternalServerError, payload: err.Error()}
 	}
 	return &returnedDataServiceData{code: fiber.StatusOK, payload: &msgArr}

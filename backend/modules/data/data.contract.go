@@ -2,6 +2,7 @@ package data
 
 type dataSubscribeRequest struct {
 	Topic string `query:"topic" validate:"required"`
+	Limit string `query:"limit"`
 }
 
 type dataSnapshotGetRequest struct {

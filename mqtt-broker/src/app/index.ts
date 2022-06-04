@@ -5,6 +5,7 @@ import axios from "axios";
 const backendProtocol = process.env.BACKEND_PROTOCOL || "http";
 const backendHost = process.env.BACKEND_HOST || "localhost";
 const backendPort = process.env.BACKEND_PORT || "80";
+const serverClientID = process.env.MQTT_SERVER_CLIENT_ID || "srirejeki-server";
 
 const authenticate = async (
   client: Client,
@@ -19,7 +20,7 @@ const authenticate = async (
     callback(err as AuthenticateError, false);
     return;
   }
-  if (client.id !== process.env.MQTT_SERVER_CLIENT_ID) {
+  if (!client.id.includes(serverClientID)) {
     let authorized = false;
     try {
       const res = await axios.post(
