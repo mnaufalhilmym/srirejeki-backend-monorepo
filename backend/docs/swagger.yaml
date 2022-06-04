@@ -1,0 +1,993 @@
+basePath: /
+definitions:
+  auth.authRequestResetPasswordRequest:
+    properties:
+      phonenumber:
+        type: string
+    required:
+    - phonenumber
+    type: object
+  auth.authResetPasswordRequest:
+    properties:
+      code:
+        type: string
+      password:
+        type: string
+      phonenumber:
+        type: string
+    required:
+    - code
+    - phonenumber
+    type: object
+  auth.authResponse:
+    properties:
+      payload: {}
+    type: object
+  auth.authSignInRequest:
+    properties:
+      password:
+        type: string
+      phonenumber:
+        type: string
+    required:
+    - password
+    - phonenumber
+    type: object
+  auth.authSignUpRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      phonenumber:
+        type: string
+    required:
+    - name
+    - password
+    - phonenumber
+    type: object
+  auth.authVerificationRequest:
+    properties:
+      code:
+        type: string
+      phonenumber:
+        type: string
+    required:
+    - code
+    - phonenumber
+    type: object
+  data.dataResponse:
+    properties:
+      payload: {}
+    type: object
+  data.dataSnapshotPostRequest:
+    properties:
+      data:
+        type: string
+      deviceId:
+        type: string
+      durations:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    required:
+    - data
+    - deviceId
+    - durations
+    - type
+    type: object
+  farmland.farmlandAddRequest:
+    properties:
+      description:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  farmland.farmlandDeleteRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  farmland.farmlandEditRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+    required:
+    - id
+    type: object
+  farmland.farmlandResponse:
+    properties:
+      payload: {}
+    type: object
+  mcu.microcontrollerAddRequest:
+    properties:
+      description:
+        type: string
+      deviceId:
+        type: string
+      farmlandId:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+    required:
+    - deviceId
+    - farmlandId
+    - name
+    type: object
+  mcu.microcontrollerAuthRequest:
+    properties:
+      deviceId:
+        type: string
+    required:
+    - deviceId
+    type: object
+  mcu.microcontrollerDeleteRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  mcu.microcontrollerEditRequest:
+    properties:
+      description:
+        type: string
+      deviceId:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+    required:
+    - id
+    type: object
+  mcu.microcontrollerResponse:
+    properties:
+      payload: {}
+    type: object
+  mcu.microcontrollerSendDataToMcuRequest:
+    properties:
+      data:
+        type: string
+      deviceId:
+        type: string
+      type:
+        type: string
+    required:
+    - data
+    - deviceId
+    - type
+    type: object
+  profile.profileEditRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      phonenumber:
+        type: string
+    type: object
+  profile.profileResponse:
+    properties:
+      payload: {}
+    type: object
+host: localhost:80
+info:
+  contact:
+    email: mail@hilmy.dev
+    name: API Support
+  description: This is an API documentation for SriRejeki IoT Greenhouse Monitoring
+  title: SriRejeki Backend API Documentation
+  version: "1.0"
+paths:
+  /auth:
+    get:
+      description: Get user session data using authorization bearer header
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Get user session data
+      tags:
+      - Auth
+  /auth/request-reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Send request reset user password
+      parameters:
+      - description: Phone number to send request reset password
+        in: body
+        name: authRequestResetPasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authRequestResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Send request reset user password
+      tags:
+      - Auth
+  /auth/reset-password:
+    patch:
+      consumes:
+      - application/json
+      description: Reset user's password
+      parameters:
+      - description: Required data to reset password
+        in: body
+        name: authResetPasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Reset user's password
+      tags:
+      - Auth
+  /auth/signin:
+    post:
+      consumes:
+      - application/json
+      description: Sign in
+      parameters:
+      - description: Required sign in data
+        in: body
+        name: authSignInRequest
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authSignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Sign in
+      tags:
+      - Auth
+  /auth/signout:
+    get:
+      description: Sign out using authorization bearer header
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Sign out
+      tags:
+      - Auth
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Sign up an account
+      parameters:
+      - description: Required account data
+        in: body
+        name: authSignUpRequest
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authSignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Sign up an account
+      tags:
+      - Auth
+  /auth/verify-request-reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Verify request reset password
+      parameters:
+      - description: Required data to verify request reset password
+        in: body
+        name: authVerificationRequest
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Verify request reset password
+      tags:
+      - Auth
+  /auth/verify-signup:
+    post:
+      consumes:
+      - application/json
+      description: Verify signed up account
+      parameters:
+      - description: Code to verify signed up account
+        in: body
+        name: authVerificationRequest
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.authResponse'
+      summary: Verify signed up account
+      tags:
+      - Auth
+  /data/snapshot:
+    get:
+      description: Get microcontroller snapshot data using authorization bearer header
+      parameters:
+      - description: Type of microcontroller sensor
+        in: query
+        name: type
+        required: true
+        type: string
+      - description: deviceId/clientId of the microcontroller
+        in: query
+        name: deviceId
+        required: true
+        type: string
+      - description: 'Duration of snapshot data: hour | day | month. Default: month'
+        in: query
+        name: duration
+        type: string
+      - description: 'Limit of snapshot data. It must be string form of a number.
+          Default: 30'
+        in: query
+        name: limit
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+      summary: Get microcontroller snapshot data
+      tags:
+      - Data
+    post:
+      consumes:
+      - application/json
+      description: Post microcontroller snapshot data | INTERNAL USE ON BACKEND ONLY
+      parameters:
+      - description: Required data to post microcontroller snapshot data
+        in: body
+        name: dataSnapshotPostRequest
+        required: true
+        schema:
+          $ref: '#/definitions/data.dataSnapshotPostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+      summary: Post microcontroller snapshot data | INTERNAL USE ON BACKEND ONLY
+      tags:
+      - Data
+  /data/subscribe:
+    get:
+      description: Get mqtt data in specified topic using authorization bearer header
+      parameters:
+      - description: Mqtt topic
+        in: query
+        name: topic
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/data.dataResponse'
+      summary: Get mqtt data in specified topic
+      tags:
+      - Data
+  /farmland:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing farmland data using authorization bearer header
+      parameters:
+      - description: Required data to delete existing farmland
+        in: body
+        name: farmlandDeleteRequest
+        required: true
+        schema:
+          $ref: '#/definitions/farmland.farmlandDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+      summary: Delete existing farmland data
+      tags:
+      - Farmland
+    get:
+      description: Get one farmlands data using authorization bearer header
+      parameters:
+      - description: Farmland Id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+      summary: Get one farmlands data
+      tags:
+      - Farmland
+    patch:
+      consumes:
+      - application/json
+      description: Edit existing farmland data using authorization bearer header
+      parameters:
+      - description: Required data to edit existing farmland
+        in: body
+        name: farmlandEditRequest
+        required: true
+        schema:
+          $ref: '#/definitions/farmland.farmlandEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+      summary: Edit existing farmland data
+      tags:
+      - Farmland
+    post:
+      consumes:
+      - application/json
+      description: Add new farmland data using authorization bearer header
+      parameters:
+      - description: Required data to add new farmland
+        in: body
+        name: farmlandAddRequest
+        required: true
+        schema:
+          $ref: '#/definitions/farmland.farmlandAddRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+      summary: Add new farmland data
+      tags:
+      - Farmland
+  /farmland/user:
+    get:
+      description: Get all user's farmlands data using authorization bearer header
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/farmland.farmlandResponse'
+      summary: Get all user's farmlands data
+      tags:
+      - Farmland
+  /health:
+    get:
+      description: Check application health
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Check application health
+      tags:
+      - Info
+  /mcu:
+    delete:
+      consumes:
+      - application/json
+      description: Delete existing microcontroller data
+      parameters:
+      - description: Required data to delete existing microcontroller
+        in: body
+        name: microcontrollerDeleteRequest
+        required: true
+        schema:
+          $ref: '#/definitions/mcu.microcontrollerDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Delete existing microcontroller data
+      tags:
+      - Microcontroller
+    get:
+      description: Get one microcontroller data using authorization bearer header
+      parameters:
+      - description: Microcontroller Id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Get one microcontroller data
+      tags:
+      - Microcontroller
+    patch:
+      consumes:
+      - application/json
+      description: Edit existing microcontroller data using authorization bearer header
+      parameters:
+      - description: Required data to edit existing microcontroller
+        in: body
+        name: microcontrollerEditRequest
+        required: true
+        schema:
+          $ref: '#/definitions/mcu.microcontrollerEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Edit existing microcontroller data
+      tags:
+      - Microcontroller
+    post:
+      consumes:
+      - application/json
+      description: Add new microcontroller data using authorization bearer header
+      parameters:
+      - description: Required data to add new microcontroller
+        in: body
+        name: microcontrollerAddRequest
+        required: true
+        schema:
+          $ref: '#/definitions/mcu.microcontrollerAddRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Add new microcontroller data
+      tags:
+      - Microcontroller
+  /mcu/auth:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate microcontroller | INTERNAL USE ON BACKEND ONLY
+      parameters:
+      - description: Required data to authenticate microcontroller
+        in: body
+        name: microcontrollerAuthRequest
+        required: true
+        schema:
+          $ref: '#/definitions/mcu.microcontrollerAuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Authenticate microcontroller | INTERNAL USE ON BACKEND ONLY
+      tags:
+      - Microcontroller
+  /mcu/farmland:
+    get:
+      description: Get all farmland's microcontrollers data using authorization bearer
+        header
+      parameters:
+      - description: Farmland Id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Get all farmland's microcontrollers data
+      tags:
+      - Microcontroller
+  /mcu/send:
+    post:
+      consumes:
+      - application/json
+      description: Send data to microcontroller using authorization bearer header
+      parameters:
+      - description: Required data to send data to microcontroller
+        in: body
+        name: microcontrollerSendDataToMcuRequest
+        required: true
+        schema:
+          $ref: '#/definitions/mcu.microcontrollerSendDataToMcuRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Send data to microcontroller
+      tags:
+      - Microcontroller
+  /mcu/user:
+    get:
+      description: Get all user's microcontrollers data using authorization bearer
+        header
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/mcu.microcontrollerResponse'
+      summary: Get all user's microcontrollers data
+      tags:
+      - Microcontroller
+  /metrics:
+    get:
+      description: Check application metrics
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: ""
+      summary: Check application metrics
+      tags:
+      - Info
+  /profile:
+    get:
+      description: Get profile data using authorization Bearer header
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+      summary: Get profile data
+      tags:
+      - Profile
+    patch:
+      consumes:
+      - application/json
+      description: Edit profile data using authorization Bearer header
+      parameters:
+      - description: Required data to edit profile
+        in: body
+        name: profileEditRequest
+        required: true
+        schema:
+          $ref: '#/definitions/profile.profileEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/profile.profileResponse'
+      summary: Edit profile data
+      tags:
+      - Profile
+swagger: "2.0"

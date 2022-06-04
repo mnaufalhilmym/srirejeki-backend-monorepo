@@ -1,0 +1,8 @@
+FROM node:alpine
+ADD . /app
+WORKDIR /app
+RUN npm i
+RUN npm run build
+
+EXPOSE 1883
+CMD [ "npm", "run", "start" ]
