@@ -18,7 +18,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
       REDIS_HOST: srirejeki-redis
-      REDIS_PORT: "6379"
+      REDIS_PORT: 6379
       REDIS_PASSWORD:
       REDIS_DB: 0
       MQTT_BROKER_HOST: mqtt-broker

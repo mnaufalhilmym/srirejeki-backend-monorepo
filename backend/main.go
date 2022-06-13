@@ -12,7 +12,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// Main function of backend server
 func main() {
+	// Initialization variable used for PostgreSQL and Redis.
 	pgHost := config.GetEnv(config.EnvEnum.PostgresHost).(string)
 	pgUser := config.GetEnv(config.EnvEnum.PostgresUser).(string)
 	pgPass := config.GetEnv(config.EnvEnum.PostgresPassword).(string)
@@ -27,20 +29,24 @@ func main() {
 		redisDbname = 0
 	}
 
+	// Initialize PostgreSQL database
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", pgHost, pgUser, pgPass, pgDbname, pgPort)
 	pgDb, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		errorHandler.LogErrorThenExit("main2", err)
 	}
+
 	if err := pgDb.AutoMigrate(&model.User{}, &model.Farmland{}, &model.Microcontroller{}, &model.Snapshot{}); err != nil {
 		errorHandler.LogErrorThenExit("main3", err)
 	}
 
+	// Initialize Redis database
 	rDb := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", redisHost, redisPort),
 		Password: redisPass,
 		DB:       redisDbname,
 	})
 
+	// Call controller function
 	controller(pgDb, rDb)
 }

@@ -7,6 +7,7 @@ const backendHost = process.env.BACKEND_HOST || "localhost";
 const backendPort = process.env.BACKEND_PORT || "80";
 const serverClientID = process.env.MQTT_SERVER_CLIENT_ID || "srirejeki-server";
 
+// code to authenticate ESP connected to this MQTT Broker. Use /mcu/auth endpoint in backend server.
 const authenticate = async (
   client: Client,
   username: Readonly<string>,
