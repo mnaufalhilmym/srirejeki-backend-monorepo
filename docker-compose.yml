@@ -1,84 +1,4 @@
 services:
-  backend:
-    image: srirejeki-backend
-    build:
-      context: ./backend
-      dockerfile: ../Dockerfile.backend
-    container_name: srirejeki-backend
-    restart: unless-stopped
-    depends_on:
-      - postgres
-      - redis
-    environment:
-      MODE:
-      PORT: 8080
-      POSTGRES_HOST: srirejeki-postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      REDIS_HOST: srirejeki-redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD:
-      REDIS_DB: 0
-      MQTT_BROKER_HOST: mqtt-broker
-      MQTT_BROKER_PORT: ${MQTT_BROKER_PORT}
-      MQTT_CLIENT_ID: ${MQTT_SERVER_CLIENT_ID}
-      TZ: Asia/Jakarta
-    env_file:
-      - ./.env
-    expose:
-      - 8080
-    networks:
-      - srirejeki-network
-
-  mqtt-broker:
-    image: srirejeki-mqtt-broker
-    build:
-      context: ./mqtt-broker
-      dockerfile: ../Dockerfile.mqtt-broker
-    container_name: srirejeki-mqtt-broker
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      BACKEND_PROTOCOL: http
-      BACKEND_HOST: srirejeki-nginx
-      BACKEND_PORT: 80
-      MQTT_BROKER_PORT: ${MQTT_BROKER_PORT}
-      MQTT_SERVER_CLIENT_ID: ${MQTT_SERVER_CLIENT_ID}
-      TZ: Asia/Jakarta
-    env_file:
-      - ./.env
-    expose:
-      - 1883
-    networks:
-      - srirejeki-network
-
-  proxy:
-    container_name: srirejeki-nginx
-    image: nginx:alpine
-    restart: unless-stopped
-    depends_on:
-      - backend
-      - mqtt-broker
-    volumes:
-      - ./docker/volumes/nginx/nginx.conf:/etc/nginx/nginx.conf:Z
-      - ./docker/volumes/nginx/conf.d:/etc/nginx/conf.d:Z
-      - ./docker/volumes/nginx/stream_conf.d:/etc/nginx/stream_conf.d:Z
-      - ./docker/volumes/nginx/letsencrypt/live:/etc/letsencrypt/live:Z
-      # - ./docker/volumes/nginx/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:Z
-      # - ./docker/volumes/nginx/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:Z
-      - ./docker/volumes/nginx/log:/var/log/nginx:Z
-    environment:
-      TZ: Asia/Jakarta
-    ports:
-      - 80:80
-      - 443:443
-      - 1883:1883
-    networks:
-      - srirejeki-network
-
   postgres:
     container_name: srirejeki-postgres
     image: postgres:alpine
@@ -94,15 +14,6 @@ services:
       TZ: Asia/Jakarta
     # ports:
     #   - 5432:5432
-    networks:
-      - srirejeki-network
-
-  redis:
-    container_name: srirejeki-redis
-    image: redis:alpine
-    restart: unless-stopped
-    environment:
-      TZ: Asia/Jakarta
     networks:
       - srirejeki-network
 
